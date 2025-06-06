@@ -1,0 +1,109 @@
+/* Base form container */
+form {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Section headings */
+.section {
+  margin-bottom: 2rem;
+  padding: 1.25rem;
+  border-left: 6px solid #0077cc;
+  background-color: #f9fafe;
+  border-radius: 12px;
+}
+
+  .section h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: #1a1a1a;
+    font-size: 1.3rem;
+    font-weight: 600;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 0.5rem;
+  }
+
+/* Labels */
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  color: #333;
+}
+
+/* Inputs, Selects, Textareas */
+input[type="text"],
+input[type="time"],
+select,
+textarea {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  transition: border 0.3s ease;
+}
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    border-color: #0077cc;
+    outline: none;
+    background-color: #f0faff;
+  }
+
+/* Checkbox styling */
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.checkbox-group input[type="checkbox"] {
+  transform: scale(1.2);
+}
+
+/* Meals dynamic list spacing */
+.meal-entry {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Buttons */
+button[type="submit"],
+button[type="button"] {
+  background-color: #0077cc;
+  color: white;
+  padding: 0.6rem 1.25rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background-color: #005fa3;
+}
+
+/* Responsive tweaks */
+@media (max-width: 640px) {
+  form {
+    padding: 1.5rem;
+  }
+
+  .meal-entry {
+    flex-direction: column;
+  }
+}
