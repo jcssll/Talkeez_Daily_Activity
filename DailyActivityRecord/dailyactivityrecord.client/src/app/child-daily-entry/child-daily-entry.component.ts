@@ -52,4 +52,39 @@ export class ChildDailyEntryComponent {
     return this.form.get('needs') as FormArray;
   }
 
+  toggleBehavior(type: string, event: any) {
+    const behaviors = this.behaviors;
+
+    if (event.target.checked) {
+      // Add the behavior with an optional reason field
+      behaviors.push(this.fb.group({ type, reason: [''] }));
+    } else {
+      const index = behaviors.controls.findIndex(c => c.value.type === type);
+      if (index !== -1) behaviors.removeAt(index);
+    }
+  }
+
+  addMeal(type: string) {
+    this.meals.push(this.fb.group({
+      type,
+      time: [''],
+      amount: ['']
+    }));
+  }
+
+  toggleNeed(item: string, event: any) {
+    const arr = this.needs;
+    if (event.target.checked) {
+      arr.push(this.fb.control(item));
+    } else {
+      const index = arr.controls.findIndex(c => c.value === item);
+      if (index !== -1) arr.removeAt(index);
+    }
+  }
+
+  onSubmit() {
+    console.log(this.form.value);
+    // Send to backend via HttpClient here
+  }
+
 }
