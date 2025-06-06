@@ -1,1 +1,57 @@
-<p>child-daily-entry works!</p>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+  <div class="section">
+    <h3>Mood Today</h3>
+    <label for="mood">Select Mood</label>
+    <select formControlName="mood">
+      <option value="">Choose...</option>
+      <option value="happy">😊 Happy</option>
+      <option value="neutral">😐 Neutral</option>
+      <option value="sad">😢 Sad</option>
+    </select>
+  </div>
+
+  <div class="section">
+    <h3>Behaviors</h3>
+    <div formArrayName="behaviors" class="checkbox-group">
+      <label><input type="checkbox" (change)="toggleBehavior('Tantrum', $event)"> Tantrum</label>
+      <label><input type="checkbox" (change)="toggleBehavior('Disrobed', $event)"> Disrobed</label>
+    </div>
+    <div *ngFor="let behavior of behaviors.controls; let i = index" [formGroupName]="i">
+      <ng-container *ngIf="behavior.value.type === 'Tantrum' || behavior.value.type === 'Disrobed'">
+        <label>Reason for {{ behavior.value.type }}</label>
+        <input type="text" formControlName="reason" placeholder="Enter reason..." />
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Meals</h3>
+    <button type="button" (click)="addMeal('Snack')">+ Add Snack</button>
+    <button type="button" (click)="addMeal('Lunch')">+ Add Lunch</button>
+
+    <div *ngFor="let meal of meals.controls; let i = index" [formGroupName]="i" class="meal-entry">
+      <input type="time" formControlName="time" />
+      <select formControlName="amount">
+        <option value="all">All</option>
+        <option value="most">Most</option>
+        <option value="some">Some</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Notes</h3>
+    <textarea formControlName="notes" placeholder="Additional observations..."></textarea>
+  </div>
+
+  <div class="section">
+    <h3>Needs</h3>
+    <div class="checkbox-group" formArrayName="needs">
+      <label><input type="checkbox" (change)="toggleNeed('Pull-ups', $event)"> Pull-ups</label>
+      <label><input type="checkbox" (change)="toggleNeed('Extra Clothes', $event)"> Extra Clothes</label>
+    </div>
+  </div>
+
+  <button type="submit">Submit</button>
+</form>
