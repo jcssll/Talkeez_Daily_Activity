@@ -1,0 +1,40 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\essen\\source\\Talkeez_Daily_Activity\\DailyActivityRecord\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{AD9F0AFB-E96D-459B-92F0-3D28D5CE6F35}|DailyActivityRecord.Server\\DailyActivityRecord.Server.csproj|c:\\users\\essen\\source\\talkeez_daily_activity\\dailyactivityrecord\\dailyactivityrecord.server\\dailyactivityrecord.server.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
+      "RelativeMoniker": "D:0:0:{AD9F0AFB-E96D-459B-92F0-3D28D5CE6F35}|DailyActivityRecord.Server\\DailyActivityRecord.Server.csproj|solutionrelative:dailyactivityrecord.server\\dailyactivityrecord.server.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "DailyActivityRecord.Server",
+              "DocumentMoniker": "C:\\Users\\essen\\source\\Talkeez_Daily_Activity\\DailyActivityRecord\\DailyActivityRecord.Server\\DailyActivityRecord.Server.csproj",
+              "RelativeDocumentMoniker": "DailyActivityRecord.Server\\DailyActivityRecord.Server.csproj",
+              "ToolTip": "C:\\Users\\essen\\source\\Talkeez_Daily_Activity\\DailyActivityRecord\\DailyActivityRecord.Server\\DailyActivityRecord.Server.csproj",
+              "RelativeToolTip": "DailyActivityRecord.Server\\DailyActivityRecord.Server.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-06-05T15:31:24.827Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

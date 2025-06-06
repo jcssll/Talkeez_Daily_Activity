@@ -1,0 +1,11 @@
+DailyActivityRecord/.vs/DailyActivityRecord/config/applicationhost.config
+*.v2
+*.vsidx
+DailyActivityRecord/.vs/DailyActivityRecord/v17/.suo
+*.bin
+*.dll
+*.pdb
+*.cache
+DailyActivityRecord/DailyActivityRecord.Server/obj/Debug/net8.0/DailyAct.9E94D32B.Up2Date
+*.props
+*.exe
