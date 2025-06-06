@@ -1,0 +1,6 @@
+@DailyActivityRecord.Server_HostAddress = http://localhost:5168
+
+GET {{DailyActivityRecord.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

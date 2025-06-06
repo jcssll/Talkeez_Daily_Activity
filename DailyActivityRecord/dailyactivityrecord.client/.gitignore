@@ -1,0 +1,97 @@
+# =======================
+# Angular Build Artifacts
+# =======================
+/dist/
+/build/
+/tmp/
+/out-tsc/
+/.angular/
+/.angular/cache/
+.cache/
+
+# Node Dependencies and Logs
+/node_modules/
+package-lock.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Environment Variables
+.env
+.env.*
+
+# Coverage and Test Output
+/coverage/
+karma-results.html
+test-output/
+.jest/
+.jasmine/
+
+# =======================
+# .NET Core Artifacts
+# =======================
+bin/
+obj/
+out/
+*.dll
+*.exe
+*.pdb
+*.vsidx
+*.dtbcache
+*.tmp
+*.bak
+*.log
+*.nupkg
+*.snupkg
+*.nuspec
+*.ncache
+
+# ASP.NET Core Configuration and Secrets
+appsettings.Development.json
+appsettings.Local.json
+*.secret.json
+secrets.json
+
+# Entity Framework
+Migrations/
+
+# =======================
+# IDE and Editor Files
+# =======================
+.vscode/
+.vs/
+.idea/
+*.code-workspace
+*.sln.docstates
+*.user
+*.suo
+*.userosscache
+*.iml
+*.launch
+*.settings/
+.project
+.classpath
+.c9/
+.history/
+
+# =======================
+# OS-specific Files
+# =======================
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.AppleDouble
+.LSOverride
+
+# =======================
+# Git & Miscellaneous
+# =======================
+*.orig
+*.rej
+*.patch
+connect.lock
+libpeerconnection.log
+testem.log
+typings/
