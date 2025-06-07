@@ -1,7 +1,5 @@
-import { platformBrowser } from '@angular/platform-browser';
-import { AppModule } from './app/app.module';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { ChildDailyEntryComponent } from './app/child-daily-entry/child-daily-entry.component';
 
-platformBrowser().bootstrapModule(AppModule, {
-  ngZoneEventCoalescing: true,
-})
+bootstrapApplication(ChildDailyEntryComponent)
   .catch(err => console.error(err));
