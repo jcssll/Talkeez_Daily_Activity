@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DailyActivityRecord.Server")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e849e05b3074e323441b912a6015d152c14b35d8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8cc180cb39f368c7e144e0cdc2545755fd038c07")]
 [assembly: System.Reflection.AssemblyProductAttribute("DailyActivityRecord.Server")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DailyActivityRecord.Server")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
