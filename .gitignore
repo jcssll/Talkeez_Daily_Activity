@@ -9,3 +9,6 @@ DailyActivityRecord/.vs/DailyActivityRecord/v17/.suo
 DailyActivityRecord/DailyActivityRecord.Server/obj/Debug/net8.0/DailyAct.9E94D32B.Up2Date
 *.props
 *.exe
+DailyActivityRecord/DailyActivityRecord.Server/obj/Debug/net8.0/DailyActivityRecord.Server.sourcelink.json
+/DailyActivityRecord/DailyActivityRecord.Server/obj/Debug/net8.0
+DailyActivityRecord/DailyActivityRecord.Server/obj/Debug/net8.0/DailyActivityRecord.Server.AssemblyInfo.cs
