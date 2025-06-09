@@ -1,3 +1,4 @@
+using DailyActivityRecord.Server.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DailyActivityRecord.Server.Controllers;
