@@ -1,21 +1,18 @@
-import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ChildDailyEntryComponent } from './child-daily-entry/child-daily-entry.component';
+import { ChildDailyEntryComponent } from './child-daily-entry/child-daily-entry.component'; // ✅ Standalone
 
 @NgModule({
   declarations: [
-    AppComponent,
-    ChildDailyEntryComponent
+    AppComponent // ✅ ONLY non-standalone components go here
   ],
   imports: [
-    BrowserModule, HttpClientModule,
-    AppRoutingModule, ReactiveFormsModule
+    BrowserModule,
+    ReactiveFormsModule,
+    ChildDailyEntryComponent // ✅ Standalone components go here
   ],
-  providers: [],
-  bootstrap: [ChildDailyEntryComponent] //Make this the root for now
+  bootstrap: [ChildDailyEntryComponent]
 })
 export class AppModule { }
