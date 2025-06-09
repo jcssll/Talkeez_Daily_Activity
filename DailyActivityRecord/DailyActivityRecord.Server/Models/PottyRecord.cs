@@ -1,4 +1,4 @@
-﻿namespace DailyActivityRecord.Server
+﻿namespace DailyActivityRecord.Server.Models
 {
     public class PottyRecord
     {

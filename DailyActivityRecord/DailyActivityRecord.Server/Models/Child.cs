@@ -7,5 +7,6 @@
         public DateTime DOB { get; set; }
         public string Notes { get; set; } // Allergies, special care, etc.
         public int CreatedByUserId { get; set; } // Parent
+        public ICollection<ChildUserAccess> ChildAccess { get; set; }
     }
 }

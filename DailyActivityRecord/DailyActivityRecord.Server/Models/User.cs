@@ -6,5 +6,5 @@ public class User
     public string Username { get; set; }  // Or Email
     public string Role { get; set; } // Parent, Specialist, Babysitter
     public bool HasSubscription { get; set; }
-    public List<ChildUserAccess> ChildAccess { get; set; }
+    public ICollection<ChildUserAccess> ChildAccess { get; set; }
 }
