@@ -1,90 +1,156 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-child-daily-entry',
-  standalone: false,
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './child-daily-entry.component.html',
-  styleUrl: './child-daily-entry.component.css'
+  styleUrls: ['./child-daily-entry.component.css']
 })
 export class ChildDailyEntryComponent {
-
   form: FormGroup;
 
   constructor(private fb: FormBuilder) {
-
     this.form = this.fb.group({
       date: [new Date()],
       mood: [''],
       behaviors: this.fb.array([]),
-      pottyRecords: this.fb.array([]),
       meals: this.fb.array([]),
-      schedule: this.fb.array([]),
+      pottyRecords: this.fb.array([]),
       notes: [''],
-      needs: this.fb.array([])
+      needs: this.fb.array([]),
+      schedule: this.fb.array([]),
+      otherActivity: [''],
+      customNeeds: this.fb.array([]) // ✅ Add this for custom needs
     });
-
   }
 
-  //Optionally, create accessors for FormArrays
-
-  get mood(): FormArray {
-    return this.form.get('mood') as FormArray;
-  }
-  get behaviors(): FormArray{
-  return this.form.get('behaviors') as FormArray;
-  }
-
-  get pottyRecords(): FormArray {
-    return this.form.get('meals') as FormArray;
+  // ----- FORM ARRAY GETTERS -----
+  get behaviors(): FormArray {
+    return this.form.get('behaviors') as FormArray;
   }
 
   get meals(): FormArray {
     return this.form.get('meals') as FormArray;
   }
-  get schedule(): FormArray {
-    return this.form.get('schedule') as FormArray;
+
+  get pottyRecords(): FormArray {
+    return this.form.get('pottyRecords') as FormArray;
   }
-  get notes(): FormArray {
-    return this.form.get('notes') as FormArray;
-  }
+
   get needs(): FormArray {
     return this.form.get('needs') as FormArray;
   }
 
-  toggleBehavior(type: string, event: any) {
-    const behaviors = this.behaviors;
+  get customNeeds(): FormArray {
+    return this.form.get('customNeeds') as FormArray;
+  }
 
+  // ----- BEHAVIOR HANDLER -----
+  toggleBehavior(type: string, event: any) {
     if (event.target.checked) {
-      // Add the behavior with an optional reason field
-      behaviors.push(this.fb.group({ type, reason: [''] }));
+      this.behaviors.push(this.fb.group({ type, reason: [''] }));
     } else {
-      const index = behaviors.controls.findIndex(c => c.value.type === type);
-      if (index !== -1) behaviors.removeAt(index);
+      const index = this.behaviors.controls.findIndex(c => c.value.type === type);
+      if (index !== -1) this.behaviors.removeAt(index);
     }
   }
 
+  // ----- MEAL HANDLER -----
   addMeal(type: string) {
     this.meals.push(this.fb.group({
-      type,
+      type: [type],
       time: [''],
       amount: ['']
     }));
   }
 
-  toggleNeed(item: string, event: any) {
-    const arr = this.needs;
+  // ----- POTTY HANDLER -----
+  addPottyRecord() {
+    this.pottyRecords.push(this.fb.group({
+      time: [''],
+      status: this.fb.array([])
+    }));
+  }
+
+
+  togglePottyOption(index: number, value: string, event: any) {
+    const recordGroup = this.pottyRecords.at(index) as FormGroup;
+    const statuses = recordGroup.get('status') as FormArray;
+
     if (event.target.checked) {
-      arr.push(this.fb.control(item));
+      statuses.push(this.fb.control(value));
     } else {
-      const index = arr.controls.findIndex(c => c.value === item);
-      if (index !== -1) arr.removeAt(index);
+      const idx = statuses.controls.findIndex(c => c.value === value);
+      if (idx !== -1) statuses.removeAt(idx);
     }
   }
 
-  onSubmit() {
-    console.log(this.form.value);
-    // Send to backend via HttpClient here
+
+  get schedule(): FormArray {
+    return this.form.get('schedule') as FormArray;
   }
 
+  toggleSchedule(item: string, event: any) {
+    const array = this.schedule;
+
+    if (event.target.checked) {
+      array.push(this.fb.control(item));
+    } else {
+      const index = array.controls.findIndex(c => c.value === item);
+      if (index !== -1) array.removeAt(index);
+
+      // Auto-clear otherActivity if "Other" is unchecked
+      if (item === 'Other') {
+        this.form.patchValue({ otherActivity: '' });
+      }
+    }
+  }
+
+  scheduleIncludes(item: string): boolean {
+    return this.schedule.value.includes(item);
+  }
+
+
+  // ----- NEEDS HANDLER -----
+  toggleNeed(label: string, event: any) {
+    if (event.target.checked) {
+      this.needs.push(this.fb.control(label));
+    } else {
+      const index = this.needs.controls.findIndex(c => c.value === label);
+      if (index !== -1) this.needs.removeAt(index);
+    }
+  }
+
+  // ----- CUSTOM NEEDS HANDLER -----
+  addCustomNeed() {
+    this.customNeeds.push(this.fb.group({
+      label: [''],
+      active: [false]
+    }));
+  }
+
+  removeCustomNeed(index: number) {
+    this.customNeeds.removeAt(index);
+  }
+
+  getActivitySummary(): string[] {
+    const activities = this.schedule.value;
+    const other = this.form.get('otherActivity')?.value;
+    if (other && activities.includes('Other')) {
+      return activities.map((a:string)   => (a === 'Other' ? `Other: ${other}` : a));
+    }
+    return activities;
+  }
+
+  // ----- SUBMIT HANDLER -----
+  onSubmit() {
+    console.log('Form submitted:', this.form.value);
+    // TODO: send to backend
+    console.log('Activities Summary:', this.getActivitySummary());
+  }
 }
+
+
