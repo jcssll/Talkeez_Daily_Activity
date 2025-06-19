@@ -1,18 +1,33 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { ChildService } from '../services/child.service';
+import { DailyEntryService } from '../services/daily-entry.service';
+import { RouterModule } from '@angular/router'; 
 
 @Component({
   selector: 'app-child-daily-entry',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule
+  ],
   templateUrl: './child-daily-entry.component.html',
   styleUrls: ['./child-daily-entry.component.css']
 })
-export class ChildDailyEntryComponent {
-  form: FormGroup;
+export class ChildDailyEntryComponent implements OnInit {
+  // Dependency Injection using `inject()` for standalone component best practices
+  private route = inject(ActivatedRoute);
+  private fb = inject(FormBuilder);
+  private childService = inject(ChildService);
+  private dailyEntryService = inject(DailyEntryService);
 
-  constructor(private fb: FormBuilder) {
+  form: FormGroup;
+  child: any;
+
+  constructor() {
     this.form = this.fb.group({
       date: [new Date()],
       mood: [''],
@@ -23,32 +38,30 @@ export class ChildDailyEntryComponent {
       needs: this.fb.array([]),
       schedule: this.fb.array([]),
       otherActivity: [''],
-      customNeeds: this.fb.array([]) // ✅ Add this for custom needs
+      customNeeds: this.fb.array([])
     });
   }
 
-  // ----- FORM ARRAY GETTERS -----
-  get behaviors(): FormArray {
-    return this.form.get('behaviors') as FormArray;
+  // ---------- FORM ARRAY GETTERS ----------
+  get behaviors(): FormArray { return this.form.get('behaviors') as FormArray; }
+  get meals(): FormArray { return this.form.get('meals') as FormArray; }
+  get pottyRecords(): FormArray { return this.form.get('pottyRecords') as FormArray; }
+  get needs(): FormArray { return this.form.get('needs') as FormArray; }
+  get customNeeds(): FormArray { return this.form.get('customNeeds') as FormArray; }
+  get schedule(): FormArray { return this.form.get('schedule') as FormArray; }
+
+  // ---------- ON INIT ----------
+  ngOnInit(): void {
+    const childId = this.route.snapshot.paramMap.get('childId');
+    if (childId) {
+      this.childService.getChildProfile(+childId).subscribe({
+        next: (data) => this.child = data,
+        error: (err) => console.error('Failed to load child:', err)
+      });
+    }
   }
 
-  get meals(): FormArray {
-    return this.form.get('meals') as FormArray;
-  }
-
-  get pottyRecords(): FormArray {
-    return this.form.get('pottyRecords') as FormArray;
-  }
-
-  get needs(): FormArray {
-    return this.form.get('needs') as FormArray;
-  }
-
-  get customNeeds(): FormArray {
-    return this.form.get('customNeeds') as FormArray;
-  }
-
-  // ----- BEHAVIOR HANDLER -----
+  // ---------- BEHAVIOR HANDLER ----------
   toggleBehavior(type: string, event: any) {
     if (event.target.checked) {
       this.behaviors.push(this.fb.group({ type, reason: [''] }));
@@ -58,23 +71,18 @@ export class ChildDailyEntryComponent {
     }
   }
 
-  // ----- MEAL HANDLER -----
+  // ---------- MEAL HANDLER ----------
   addMeal(type: string) {
-    this.meals.push(this.fb.group({
-      type: [type],
-      time: [''],
-      amount: ['']
-    }));
+    this.meals.push(this.fb.group({ type: [type], time: [''], amount: [''] }));
   }
 
-  // ----- POTTY HANDLER -----
+  // ---------- POTTY HANDLER ----------
   addPottyRecord() {
     this.pottyRecords.push(this.fb.group({
       time: [''],
       status: this.fb.array([])
     }));
   }
-
 
   togglePottyOption(index: number, value: string, event: any) {
     const recordGroup = this.pottyRecords.at(index) as FormGroup;
@@ -88,11 +96,7 @@ export class ChildDailyEntryComponent {
     }
   }
 
-
-  get schedule(): FormArray {
-    return this.form.get('schedule') as FormArray;
-  }
-
+  // ---------- SCHEDULE HANDLER ----------
   toggleSchedule(item: string, event: any) {
     const array = this.schedule;
 
@@ -101,11 +105,7 @@ export class ChildDailyEntryComponent {
     } else {
       const index = array.controls.findIndex(c => c.value === item);
       if (index !== -1) array.removeAt(index);
-
-      // Auto-clear otherActivity if "Other" is unchecked
-      if (item === 'Other') {
-        this.form.patchValue({ otherActivity: '' });
-      }
+      if (item === 'Other') this.form.patchValue({ otherActivity: '' });
     }
   }
 
@@ -113,8 +113,16 @@ export class ChildDailyEntryComponent {
     return this.schedule.value.includes(item);
   }
 
+  getActivitySummary(): string[] {
+    const activities = this.schedule.value;
+    const other = this.form.get('otherActivity')?.value;
+    if (other && activities.includes('Other')) {
+      return activities.map((a: string) => (a === 'Other' ? `Other: ${other}` : a));
+    }
+    return activities;
+  }
 
-  // ----- NEEDS HANDLER -----
+  // ---------- NEEDS HANDLER ----------
   toggleNeed(label: string, event: any) {
     if (event.target.checked) {
       this.needs.push(this.fb.control(label));
@@ -124,33 +132,36 @@ export class ChildDailyEntryComponent {
     }
   }
 
-  // ----- CUSTOM NEEDS HANDLER -----
+  // ---------- CUSTOM NEEDS HANDLER ----------
   addCustomNeed() {
-    this.customNeeds.push(this.fb.group({
-      label: [''],
-      active: [false]
-    }));
+    this.customNeeds.push(this.fb.group({ label: [''], active: [false] }));
   }
 
   removeCustomNeed(index: number) {
     this.customNeeds.removeAt(index);
   }
 
-  getActivitySummary(): string[] {
-    const activities = this.schedule.value;
-    const other = this.form.get('otherActivity')?.value;
-    if (other && activities.includes('Other')) {
-      return activities.map((a:string)   => (a === 'Other' ? `Other: ${other}` : a));
-    }
-    return activities;
-  }
-
-  // ----- SUBMIT HANDLER -----
+  // ---------- SUBMIT HANDLER ----------
   onSubmit() {
-    console.log('Form submitted:', this.form.value);
-    // TODO: send to backend
-    console.log('Activities Summary:', this.getActivitySummary());
+    if (!this.child) return;
+
+    const entry = {
+      childId: this.child.id,
+      date: this.form.value.date,
+      mood: this.form.value.mood,
+      behaviors: this.form.value.behaviors,
+      meals: this.form.value.meals,
+      pottyRecords: this.form.value.pottyRecords,
+      notes: this.form.value.notes,
+      needs: this.form.value.needs,
+      schedule: this.getActivitySummary(),
+      customNeeds: this.form.value.customNeeds,
+      submittedByUserId: 0 // optional: populate from auth later
+    };
+
+    this.dailyEntryService.submitDailyEntry(entry).subscribe({
+      next: () => console.log('Daily entry submitted successfully.'),
+      error: (err) => console.error('Failed to submit entry:', err)
+    });
   }
 }
-
-
