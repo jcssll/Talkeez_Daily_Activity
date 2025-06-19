@@ -1,9 +1,17 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
+<div *ngIf="child" class="profile-header">
+  <h2>{{ child.name }}</h2>
+  <p><strong>DOB:</strong> {{ child.dob | date }}</p>
+  <div *ngIf="child.notes" class="alert alert-warning">
+    <strong>Notes:</strong> {{ child.notes }}
+  </div>
+</div>
 
-  <!-- Mood -->
-  <div class="section">
-    <h3>🧠 Mood Today</h3>
-    <label for="mood">Select Mood</label>
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="daily-entry-form">
+
+  <!-- Mood Section -->
+  <div class="form-section">
+    <h3>😃 Mood Today</h3>
+    <label for="mood">Select Mood:</label>
     <select formControlName="mood">
       <option value="">Choose...</option>
       <option value="happy">😊 Happy</option>
@@ -13,13 +21,11 @@
     </select>
   </div>
 
-  <!-- Behaviors -->
-  <div class="section">
+  <!-- Behaviors Section -->
+  <div class="form-section">
     <h3>⚠️ Behaviors</h3>
-    <div formArrayName="behaviors" class="checkbox-group">
-      <label><input type="checkbox" (change)="toggleBehavior('Tantrum', $event)"> Tantrum</label>
-      <label><input type="checkbox" (change)="toggleBehavior('Disrobed', $event)"> Disrobed</label>
-    </div>
+    <label><input type="checkbox" (change)="toggleBehavior('Tantrum', $event)"> Tantrum</label>
+    <label><input type="checkbox" (change)="toggleBehavior('Disrobed', $event)"> Disrobed</label>
 
     <div *ngFor="let behavior of behaviors.controls; let i = index" [formGroupName]="i">
       <ng-container *ngIf="behavior.value.type === 'Tantrum' || behavior.value.type === 'Disrobed'">
@@ -29,112 +35,81 @@
     </div>
   </div>
 
-  <!-- Meals -->
-  <div class="section">
-    <h3>🍽️ Meals</h3>
-    <div class="meal-buttons">
-      <button type="button" (click)="addMeal('Snack')">+ Add Snack</button>
-      <button type="button" (click)="addMeal('Lunch')">+ Add Lunch</button>
-    </div>
+  <!-- Meals Section -->
+  <div class="form-section">
+    <h3>🍴 Meals</h3>
+    <button type="button" (click)="addMeal('Snack')">+ Add Snack</button>
+    <button type="button" (click)="addMeal('Lunch')">+ Add Lunch</button>
 
-    <div class="meal-grid">
-      <!-- Snack Column -->
-      <div class="meal-column">
-        <h4>Snack</h4>
-        <ng-container *ngFor="let meal of meals.controls; let i = index">
-          <div *ngIf="meal.value.type === 'Snack'" [formGroupName]="i" class="meal-entry">
-            <input type="time" formControlName="time" />
-            <select formControlName="amount">
-              <option value="all">All</option>
-              <option value="most">Most</option>
-              <option value="some">Some</option>
-            </select>
-          </div>
-        </ng-container>
-      </div>
-
-      <!-- Lunch Column -->
-      <div class="meal-column">
-        <h4>Lunch</h4>
-        <ng-container *ngFor="let meal of meals.controls; let i = index">
-          <div *ngIf="meal.value.type === 'Lunch'" [formGroupName]="i" class="meal-entry">
-            <input type="time" formControlName="time" />
-            <select formControlName="amount">
-              <option value="all">All</option>
-              <option value="most">Most</option>
-              <option value="some">Some</option>
-            </select>
-          </div>
-        </ng-container>
-      </div>
+    <div *ngFor="let meal of meals.controls; let i = index" [formGroupName]="i">
+      <p><strong>{{ meal.value.type }}</strong></p>
+      <label>Time:</label>
+      <input type="time" formControlName="time" />
+      <label>Amount:</label>
+      <select formControlName="amount">
+        <option value="all">All</option>
+        <option value="most">Most</option>
+        <option value="some">Some</option>
+      </select>
     </div>
   </div>
 
-  <!-- Potty Records -->
-  <div class="section">
+  <!-- Potty Section -->
+  <div class="form-section">
     <h3>🚽 Potty Record</h3>
-    <div formArrayName="pottyRecords">
-      <button type="button" (click)="addPottyRecord()">+ Add Potty Record</button>
-      <div *ngFor="let record of pottyRecords.controls; let i = index" [formGroupName]="i" class="potty-entry">
-        <label>Time</label>
-        <input type="time" formControlName="time" />
+    <button type="button" (click)="addPottyRecord()">+ Add Potty Record</button>
 
-        <div formArrayName="status">
-          <label><input type="checkbox" (change)="togglePottyOption(i, 'Wet', $event)"> Wet</label>
-          <label><input type="checkbox" (change)="togglePottyOption(i, 'Dirty', $event)"> Dirty</label>
-          <label><input type="checkbox" (change)="togglePottyOption(i, 'Dry', $event)"> Dry</label>
-          <label><input type="checkbox" (change)="togglePottyOption(i, 'Potty', $event)"> Potty</label>
-        </div>
-      </div>
+    <div *ngFor="let record of pottyRecords.controls; let i = index" [formGroupName]="i">
+      <label>Time:</label>
+      <input type="time" formControlName="time" />
+
+      <label>Status:</label>
+      <label><input type="checkbox" (change)="togglePottyOption(i, 'Wet', $event)"> Wet</label>
+      <label><input type="checkbox" (change)="togglePottyOption(i, 'Dirty', $event)"> Dirty</label>
+      <label><input type="checkbox" (change)="togglePottyOption(i, 'Dry', $event)"> Dry</label>
+      <label><input type="checkbox" (change)="togglePottyOption(i, 'Potty', $event)"> Used Potty</label>
     </div>
   </div>
 
-  <div class="section">
-    <h3>🎯 Activities Attended</h3>
-    <div class="checkbox-group" formArrayName="schedule">
-      <label><input type="checkbox" (change)="toggleSchedule('Speech', $event)"> Speech</label>
-      <label><input type="checkbox" (change)="toggleSchedule('Occupational Therapy', $event)"> OT</label>
-      <label><input type="checkbox" (change)="toggleSchedule('Behavioral Therapy', $event)"> Behavioral Therapy</label>
-      <label><input type="checkbox" (change)="toggleSchedule('P.E.', $event)"> P.E.</label>
-      <label><input type="checkbox" (change)="toggleSchedule('Art', $event)"> Art</label>
-      <label><input type="checkbox" (change)="toggleSchedule('Music', $event)"> Music</label>
-      <label><input type="checkbox" (change)="toggleSchedule('Library', $event)"> Library</label>
-      <label><input type="checkbox" (change)="toggleSchedule('Sensory Room', $event)"> Sensory Room</label>
-      <label><input type="checkbox" (change)="toggleSchedule('Other', $event)"> Other</label>
+  <!-- Schedule Section -->
+  <div class="form-section">
+    <h3>📚 Activities</h3>
+    <label><input type="checkbox" (change)="toggleSchedule('Speech', $event)"> Speech</label>
+    <label><input type="checkbox" (change)="toggleSchedule('OT', $event)"> OT</label>
+    <label><input type="checkbox" (change)="toggleSchedule('Art', $event)"> Art</label>
+    <label><input type="checkbox" (change)="toggleSchedule('Music', $event)"> Music</label>
+    <label><input type="checkbox" (change)="toggleSchedule('P.E.', $event)"> P.E.</label>
+    <label><input type="checkbox" (change)="toggleSchedule('Library', $event)"> Library</label>
+    <label><input type="checkbox" (change)="toggleSchedule('Sensory Room', $event)"> Sensory Room</label>
+    <label><input type="checkbox" (change)="toggleSchedule('Other', $event)"> Other</label>
 
-      <!-- Show textbox only when "Other" is selected -->
-      <div *ngIf="scheduleIncludes('Other')" class="mt-2">
-        <label>Please specify other activity</label>
-        <input type="text" formControlName="otherActivity" placeholder="e.g., Social Skills Group" />
-      </div>
+    <div *ngIf="scheduleIncludes('Other')">
+      <input type="text" formControlName="otherActivity" placeholder="Describe other activity" />
     </div>
   </div>
 
-  <!-- Notes -->
-  <div class="section">
+  <!-- Needs Section -->
+  <div class="form-section">
+    <h3>🧺 Needs</h3>
+    <label><input type="checkbox" (change)="toggleNeed('Pull-ups', $event)"> Pull-ups</label>
+    <label><input type="checkbox" (change)="toggleNeed('Extra Clothes', $event)"> Extra Clothes</label>
+
+    <button type="button" (click)="addCustomNeed()">➕ Add Custom Need</button>
+    <div *ngFor="let custom of customNeeds.controls; let i = index" [formGroupName]="i">
+      <input type="checkbox" formControlName="active" />
+      <input type="text" formControlName="label" placeholder="Enter custom need..." />
+      <button type="button" (click)="removeCustomNeed(i)">🗑️</button>
+    </div>
+  </div>
+
+  <!-- Notes Section -->
+  <div class="form-section">
     <h3>📝 Notes</h3>
-    <textarea formControlName="notes" placeholder="Additional observations..."></textarea>
-  </div>
-
-  <!-- Needs -->
-  <div class="section">
-    <h3>🎒 Needs</h3>
-    <div class="checkbox-group" formArrayName="needs">
-      <label><input type="checkbox" (change)="toggleNeed('Pull-ups', $event)"> Pull-ups</label>
-      <label><input type="checkbox" (change)="toggleNeed('Extra Clothes', $event)"> Extra Clothes</label>
-    </div>
-
-    <!-- Custom Needs -->
-    <div class="custom-needs">
-      <button type="button" (click)="addCustomNeed()">➕ Add Custom Need</button>
-      <div *ngFor="let custom of customNeeds.controls; let i = index" [formGroupName]="i" class="custom-need-row">
-        <input type="checkbox" formControlName="active" />
-        <input type="text" formControlName="label" placeholder="Custom need..." />
-        <button type="button" (click)="removeCustomNeed(i)">🗑️</button>
-      </div>
-    </div>
+    <textarea formControlName="notes" rows="4" placeholder="Enter any additional observations..."></textarea>
   </div>
 
   <!-- Submit -->
-  <button type="submit">Submit</button>
+  <div class="form-section">
+    <button type="submit">✅ Submit Daily Entry</button>
+  </div>
 </form>
