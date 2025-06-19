@@ -15,7 +15,7 @@
         public List<string> Schedule { get; set; }
         public string Notes { get; set; }
         public List<string> Needs { get; set; }
-        public List<CustomField> CustomFields { get; set; }
+        public List<CustomFields> CustomFields { get; set; }
         public string UserId { get; set; } // For multi-tenancy
     }
 }
