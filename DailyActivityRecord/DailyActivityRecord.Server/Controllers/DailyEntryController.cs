@@ -1,32 +1,36 @@
-﻿using DailyActivityRecord.Server.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using DailyActivityRecord.Server.Models;
+using DailyActivityRecord.Server.Data;
 
 namespace DailyActivityRecord.Server.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class DailyEntryController : ControllerBase
     {
-        //POST api/dailyentry
-        [HttpPost]
-        public IActionResult CreateEntry([FromBody] DailyEntry entry )
-        {
-            if (entry == null)
-                return BadRequest("Entry is null");
+        private readonly AppDbContext _context;
 
-            //Save to DB here (use dependency-injected service/repo)
-            return Ok(new { message = "Entry recorded successfully" });
+        public DailyEntryController(AppDbContext context)
+        {
+            _context = context;
         }
 
-        // Get api/dailyentry/week/123
-        [HttpGet("week/userId")]
-        public IActionResult GetWeeklySummary(string userId)
+        [HttpPost]
+        public async Task<IActionResult> AddEntry([FromBody] DailyEntry entry)
         {
-            //Pull week's worth of data for user from DB
-            var result = new List<DailyEntry>(); //replace with real data
-            return Ok(result);
+            _context.DailyEntries.Add(entry);
+            await _context.SaveChangesAsync();
+            return Ok(entry);
+        }
+
+        [HttpGet("{childId}")]
+        public async Task<IActionResult> GetEntries(int childId)
+        {
+            var entries = await _context.DailyEntries
+                .Where(e => e.ChildId == childId)
+                .ToListAsync();
+            return Ok(entries);
         }
     }
 }
-
