@@ -1,18 +1,36 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
-import { ChildDailyEntryComponent } from './child-daily-entry/child-daily-entry.component'; // ✅ Standalone
+import { ChildDailyEntryComponent } from './child-daily-entry/child-daily-entry.component';
+import { LoginComponent } from './features/login/login.component';
+import { RegisterComponent } from './features/register/register.component'; // ✅ Standalone
+import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './interceptor/auth.interceptor';
+import { DashboardComponent } from './features/dashboard/dashboard.component';
+import { ChildProfileHeaderComponent } from './features/child-profile-header/child-profile-header.component';
+import { AppRoutingModule } from './app-routing.module';
+
+
 
 @NgModule({
   declarations: [
-    AppComponent // ✅ ONLY non-standalone components go here
+    AppComponent,
+    LoginComponent,
+    RegisterComponent,
+    DashboardComponent
+    // You DO NOT declare standalone components
   ],
   imports: [
     BrowserModule,
-    ReactiveFormsModule,
-    ChildDailyEntryComponent // ✅ Standalone components go here
+    HttpClientModule,
+    AppRoutingModule,
+    ChildDailyEntryComponent, // ✅ standalone component goes in `imports`, not `declarations`
+    FormsModule,               // ✅ Required for [(ngModel)]
+    ReactiveFormsModule
   ],
-  bootstrap: [ChildDailyEntryComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }
+
