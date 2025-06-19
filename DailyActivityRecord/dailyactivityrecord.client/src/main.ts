@@ -1,5 +1,6 @@
-import { bootstrapApplication } from '@angular/platform-browser';
-import { ChildDailyEntryComponent } from '../app/child-daily-entry/child-daily-entry.component';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { AppModule } from '../app/app.module';
 
-bootstrapApplication(ChildDailyEntryComponent)
+platformBrowserDynamic()
+  .bootstrapModule(AppModule)
   .catch(err => console.error(err));
