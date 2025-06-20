@@ -16,7 +16,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
   declarations: [
-    AppComponent,
+    //AppComponent,- removing because it is a standalone component
     LoginComponent,
     RegisterComponent,
     DashboardComponent
@@ -28,7 +28,8 @@ import { AppRoutingModule } from './app-routing.module';
     AppRoutingModule,
     ChildDailyEntryComponent, // ✅ standalone component goes in `imports`, not `declarations`
     FormsModule,               // ✅ Required for [(ngModel)]
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AppComponent
   ],
   bootstrap: [AppComponent]
 })

@@ -1,0 +1,82 @@
+/* Centered container */
+form {
+  max-width: 400px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.logo-container {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.logo {
+  max-width: 150px;
+  height: auto;
+}
+
+
+/* Title */
+h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+/* Form labels */
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #444;
+}
+
+/* Inputs and selects */
+input[type="text"],
+input[type="password"],
+select {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+  input:focus,
+  select:focus {
+    outline: none;
+    border-color: #0077cc;
+    background-color: #f0f8ff;
+  }
+
+/* Submit button */
+button[type="submit"] {
+  width: 100%;
+  background-color: #0077cc;
+  color: white;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+  button[type="submit"]:hover {
+    background-color: #005fa3;
+  }
+
+/* Responsive */
+@media (max-width: 500px) {
+  form {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+}
