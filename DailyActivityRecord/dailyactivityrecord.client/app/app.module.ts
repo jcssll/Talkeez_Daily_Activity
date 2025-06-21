@@ -10,7 +10,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptor/auth.interceptor';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { ChildProfileHeaderComponent } from './features/child-profile-header/child-profile-header.component';
-import { AppRoutingModule } from './app-routing.module';
+//import { AppRoutingModule } from './app-routing.module';
 
 
 
@@ -25,7 +25,7 @@ import { AppRoutingModule } from './app-routing.module';
   imports: [
     BrowserModule,
     HttpClientModule,
-    AppRoutingModule,
+    //AppRoutingModule,
     ChildDailyEntryComponent, // ✅ standalone component goes in `imports`, not `declarations`
     FormsModule,               // ✅ Required for [(ngModel)]
     ReactiveFormsModule,
