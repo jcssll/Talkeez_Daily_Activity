@@ -9,7 +9,10 @@ import { ChildDailyEntryComponent } from './child-daily-entry/child-daily-entry.
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
+  {
+    path: 'register',
+    loadComponent: () => import('./features/register/register.component').then(m => m.RegisterComponent)
+  },
   { path: 'dashboard', component: DashboardComponent }, // ✅ Add this line
   {
     path: 'child-daily-entry/:childId',
