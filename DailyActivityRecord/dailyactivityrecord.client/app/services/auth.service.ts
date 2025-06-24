@@ -5,7 +5,7 @@ import { RegisterDto } from '../models/register-dto.model'
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly apiUrl = 'https://localhost:5001/api/auth';  // Update for your backend
+  private readonly apiUrl = 'https://localhost:5001/api/auth';  
 
   constructor(private http: HttpClient) { }
 
