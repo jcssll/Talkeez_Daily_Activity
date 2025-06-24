@@ -24,22 +24,42 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDto request)
     {
-        var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
-        if (existingUser != null)
-            return BadRequest("Username already taken.");
 
-        var user = new User
+        if (!ModelState.IsValid)
         {
-            Username = request.Username,
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
-            Role = "Parent", // Default role
-            HasSubscription = false
-        };
+            return BadRequest(ModelState);
+        }
 
-        _context.Users.Add(user);
-        await _context.SaveChangesAsync();
+        try
+        {
+            // Log input
+            //Console.WriteLine($"Registering user: {model.Username}, Role: {model.Role}");
 
-        return Ok("User registered successfully.");
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
+            if (existingUser != null)
+                return BadRequest("Username already taken.");
+
+            var user = new User
+            {
+                Username = request.Username,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
+                Role = "Parent", // Default role
+                HasSubscription = false
+            };
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return Ok("User registered successfully.");
+
+            //return Ok(new { token = "mock-token" }); // test response
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"ERROR: {ex.Message}");
+            return StatusCode(500, "Server error during registration");
+        }
+
     }
 
     [HttpPost("login")]
