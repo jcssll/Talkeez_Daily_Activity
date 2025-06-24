@@ -18,14 +18,13 @@ import { ChildProfileHeaderComponent } from './features/child-profile-header/chi
   declarations: [
     //AppComponent,- removing because it is a standalone component
     LoginComponent,
-    RegisterComponent,
     DashboardComponent
     // You DO NOT declare standalone components
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    //AppRoutingModule,
+    RegisterComponent,
     ChildDailyEntryComponent, // ✅ standalone component goes in `imports`, not `declarations`
     FormsModule,               // ✅ Required for [(ngModel)]
     ReactiveFormsModule,
