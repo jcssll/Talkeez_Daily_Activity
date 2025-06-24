@@ -1,105 +1,57 @@
-﻿using DailyActivityRecord.Server.Data;
-using DailyActivityRecord.Server.DTOs;
-using DailyActivityRecord.Server.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using DailyActivityRecord.Server.Data;
+using DailyActivityRecord.Server.Models;
+using DailyActivityRecord.Server.Services;
+using DailyActivityRecord.Server.DTOs;
+using BCrypt.Net;
 
-namespace DailyActivityRecord.Server.Controllers
+namespace DailyActivityRecord.Server.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class AuthController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AuthController : ControllerBase
+    private readonly AppDbContext _context;
+    private readonly JwtService _jwtService;
+
+    public AuthController(AppDbContext context, JwtService jwtService)
     {
-        private readonly AppDbContext _context;
-        private readonly IConfiguration _config;
+        _context = context;
+        _jwtService = jwtService;
+    }
 
-        public AuthController(AppDbContext context, IConfiguration config)
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] RegisterDto request)
+    {
+        var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
+        if (existingUser != null)
+            return BadRequest("Username already taken.");
+
+        var user = new User
         {
-            _context = context;
-            _config = config;
+            Username = request.Username,
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
+            Role = "Parent", // Default role
+            HasSubscription = false
+        };
+
+        _context.Users.Add(user);
+        await _context.SaveChangesAsync();
+
+        return Ok("User registered successfully.");
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginDto request)
+    {
+        var user = await _context.Users.SingleOrDefaultAsync(u => u.Username == request.Username);
+        if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+        {
+            return Unauthorized("Invalid credentials.");
         }
 
-        private string GenerateJwtToken(User user)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_config["Jwt:Secret"]);
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[]
-                {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, user.Role)
-            }),
-                Expires = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_config["Jwt:ExpiryMinutes"])),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
-                Issuer = _config["Jwt:Issuer"],
-                Audience = _config["Jwt:Audience"]
-            };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
-        }
-
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterDto dto)
-        {
-            var userExists = await _context.Users.AnyAsync(u => u.Username == dto.Username);
-            if (userExists) return BadRequest("Username already exists");
-
-            var passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
-
-            var user = new User
-            {
-                Username = dto.Username,
-                PasswordHash = passwordHash,
-                Role = dto.Role,
-                HasSubscription = false
-            };
-
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
-            if (user.Role == "Parent")
-            {
-                var child = new Child
-                {
-                    Name = "My Child",
-                    CreatedByUserId = user.Id
-                };
-                _context.Children.Add(child);
-                await _context.SaveChangesAsync();
-
-                _context.ChildUserAccess.Add(new ChildUserAccess
-                {
-                    UserId = user.Id,
-                    ChildId = child.Id,
-                    CanEdit = true
-                });
-                await _context.SaveChangesAsync();
-            }
-
-            var token = GenerateJwtToken(user);
-            return Ok(new { token });
-        }
-
-        [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginDto dto)
-        {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == dto.Username);
-            if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
-            {
-                return Unauthorized("Invalid credentials");
-            }
-
-            var token = GenerateJwtToken(user);
-            return Ok(new { token });
-        }
+        var token = _jwtService.GenerateToken(user);
+        return Ok(new { token });
     }
 }
