@@ -1,4 +1,6 @@
-﻿namespace DailyActivityRecord.Server.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DailyActivityRecord.Server.Models
 {
     public class DailyEntry
     {
@@ -9,12 +11,18 @@
         public User SubmittedBy { get; set; }
         public DateTime Date { get; set; }
         public string Mood { get; set; }
+        [NotMapped]
         public List<Behavior> Behaviors { get; set; }
+        [NotMapped]
         public List<PottyRecord> PottyRecords { get; set; }
+        [NotMapped]
         public List<Meal> Meals { get; set; }
+        [NotMapped]
         public List<string> Schedule { get; set; }
         public string Notes { get; set; }
+        [NotMapped]
         public List<string> Needs { get; set; }
+        [NotMapped]
         public List<CustomFields> CustomFields { get; set; }
         public string UserId { get; set; } // For multi-tenancy
     }
