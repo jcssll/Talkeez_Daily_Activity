@@ -22,9 +22,9 @@ export class LoginComponent {
         localStorage.setItem('jwtToken', res.token);
         this.router.navigate(['/dashboard']);
       },
-    })
-    error: (err: any) => {
-      console.error(err);
-    }
+      error: (err: any) => {
+        console.error('Login failed:', err);
+      }
+    });
   }
 }
