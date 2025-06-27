@@ -17,8 +17,13 @@ export class RegisterComponent {
   username = '';
   password = '';
   role = 'Parent';
+  errorMessage = ''; 
 
   constructor(private authService: AuthService, private router: Router) { }
+
+  onInputChange() {
+    this.errorMessage = '';
+  }
 
   register() {
     console.log('Form submitted');
@@ -29,9 +34,14 @@ export class RegisterComponent {
     }).subscribe({
       next: (res) => {
         localStorage.setItem('jwtToken', res.token);
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/login']);//let successful user go to the login screen -> thereafter user should go to the dashboard where the ability to create child will be
       },
       error: (err) => {
+        if (err.status === 400 && err.err === 'Username already taken.') {
+          this.errorMessage = 'That username is already in use. Please choose another.';
+        } else {
+          this.errorMessage = 'Something went wrong. Please try again later.';
+        }
         console.error(err);
       }
     });

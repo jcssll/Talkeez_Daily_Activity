@@ -16,7 +16,6 @@ import { ChildProfileHeaderComponent } from './features/child-profile-header/chi
 
 @NgModule({
   declarations: [
-    //AppComponent,- removing because it is a standalone component
     LoginComponent,
     DashboardComponent
     // You DO NOT declare standalone components

@@ -27,13 +27,16 @@ public class AuthController : ControllerBase
 
         if (!ModelState.IsValid)
         {
+            Console.WriteLine($"DTO received: Username={request?.Username}, Password={request?.Password}, Role={request?.Role}");
+
             return BadRequest(ModelState);
+
         }
 
         try
         {
             // Log input
-            //Console.WriteLine($"Registering user: {model.Username}, Role: {model.Role}");
+            Console.WriteLine($"Registering user: {request.Username}, Role: {request.Role}");
 
             var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
             if (existingUser != null)
@@ -50,9 +53,7 @@ public class AuthController : ControllerBase
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return Ok("User registered successfully.");
-
-            //return Ok(new { token = "mock-token" }); // test response
+            return Ok(new { token = "mock-token" }); // test response
         }
         catch (Exception ex)
         {
